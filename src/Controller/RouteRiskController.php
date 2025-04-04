@@ -5,6 +5,9 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
+use App\Service\WeatherService;
+
 
 final class RouteRiskController extends AbstractController
 {
@@ -12,6 +15,9 @@ final class RouteRiskController extends AbstractController
     public function risk(Request $request, WeatherService $weatherService): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        if (!isset($data['start'], $data['end'])) {
+            return $this->json(['error' => 'Missing start or end'], 400);
+        }
         $start = $data['start'];
         $end = $data['end'];
 
